@@ -27,7 +27,7 @@ body{
 	font-family: Segoe Script;
 }
 
-#selecionar, #pesquisa{
+#selecionar, #pesquisa, #cor, #brilho, #distancia, #numplanetas, #distanciaExo, #diametroOp, #distanciaOp{
 	margin: 5px;
 	width: 50%;
 	margin-left:165px;

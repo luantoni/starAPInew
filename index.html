@@ -34,25 +34,89 @@
 </div>
 
 <div class="container text-center" id="conteudoPesquisa">
-		<form role="form">
-			<div class="radio">
-				<label><input id="todos" type="radio" name="Opcao">Ver todo</label>
-				<label><input id="porNome" type="radio" name="Opcao"checked>Pesquisar Nome</label>
-			</div>
-		</form>
-		<select id="selecionar" class="form-control">
-			<option value="selecionar">Selecione categoria</option>
-			<option value="stars">Estrelas</option>
-			<option value="exo_planets">Exoplanetas </option>
-			<!--<option value="local_groups">Grupo de galáxias</option>-->
-			<option value="open_cluster">Open stars</option>
-		</select>
-		<form class="form-center">
-			<input type="pesquisa" id="pesquisa" class="form-control" size="50" placeholder="Digite o nome">
-		</form>
-		<button type="button" id="botaoPesquisa" class="btn btn-default">
-			<span class="glyphicon glyphicon-search"></span> Pesquisar
-		</button>
+	<form id="radioForm" role="form">
+		<div class="radio">
+			<label><input id="todos" value="todos" type="radio"  name="Opcao">Ver todo</label>
+			<label><input id="porNome" value="porNome" type="radio"  name="Opcao"checked>Pesquisar Nome</label>
+		</div>
+	</form>
+	<select id="selecionar" class="form-control">
+		<option value="selecionar">Selecione categoria</option>
+		<option value="stars">Estrelas</option>
+		<option value="exo_planets">Exoplanetas </option>
+		<!--<option value="local_groups">Grupo de galáxias</option>-->
+		<option value="open_cluster">Open stars</option>
+	</select>
 </div>
+
+<div class="container text-center" id="selectCategorias">
+	<div class="estrelasSelect">
+		<select id="cor" class="form-control">
+			<option value="cor">Selecione cor</option>
+			<option value="-1A0">Azul</option>
+			<option value="0A1">Vermelho</option>
+		</select>
+		<select id="distancia" class="form-control">
+			<option value="distancia">Selecione distância</option>
+			<option value="100">100 anos luz</option>
+			<option value="500">500 anos luz</option>
+		</select>
+		<select id="brilho" class="form-control">
+			<option value="brilho">Selecione o brilho natural</option>
+			<option value="0A10">Instrinsicamente fraca</option>
+			<option value="-10A-3">Instrinsicamente forte</option>
+		</select>
+	</div>
+	<div class="exoplanetasSelect">
+		<select id="numplanetas" class="form-control">
+			<option value="numplanetas">Nº planetas</option>
+			<option value="1">1 planeta</option>
+			<option value="2">2 planetas</option>
+			<option value="3">3 planetas</option>
+			<option value="4">4 planetas</option>
+			<option value="5">5 planetas</option>
+			<option value="6">6 planetas</option>
+		</select>
+		<select id="distanciaExo" class="form-control">
+			<option value="distancia">Selecione distância (anos-luz)</option>
+			<option value="10A100">10 a 100</option>
+			<option value="101A300">101 a 300</option>
+			<option value="301A500">301 a 500</option>
+			<option value="501A1000">501 a mil</option>
+			<option value="A1001">>mil</option>
+		</select>
+	</div>
+	<div class="openSelect">
+		<select id="diametroOp" class="form-control">
+			<option value="diametroOp">Selecione diâmetro</option>
+			<option value="1A5">0 a 5</option>
+			<option value="5A10">6 a 10</option>
+			<option value="10A20">11 a 20</option>
+			<option value="20A100">21 a 100</option>
+			<option value="A100">>cem</option>
+		</select>
+		<select id="distanciaOp" class="form-control">
+			<option value="distanciaOp">Selecione distância</option>
+			<option value="100A1000"> menos 1000 anos luz</option>
+			<option value="1001A2000">1000 anos luz</option>
+			<option value="2001A3000">2000 anos luz</option>
+			<option value="3001A4000">3000 anos luz</option>
+			<option value="4001A5000">4000 anos luz</option>
+			<option value="5001A6000">5000 anos luz</option>
+			<option value="A60001">>5001 anos luz</option>
+		</select>
+	</div>
+</div>
+<div class="container text-center" id="conteudoInput">
+	<form class="form-center">
+		<input type="pesquisa" id="pesquisa" class="form-control" size="50" placeholder="Digite o nome">
+	</form>
+</div>
+<div class="container text-center" id="conteudoBotao">
+	<button type="button" id="botaoPesquisar" class="btn btn-default">
+		<span class="glyphicon glyphicon-search"></span> Pesquisar
+	</button>
+</div>
+<div id="conteudo"></div>
 </body>
 </html>
