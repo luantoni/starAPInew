@@ -1,0 +1,45 @@
+.navbar{
+    margin-bottom: 0;
+	border-radius: 0;
+	background-color: lightgrey;
+	color: white;
+	border-radius: 10px;
+}
+
+.jumbotron{
+	background-image: url("constelacao.jpg");
+	background-repeat: no-repeat;
+	background-color: black;
+	width: 100%;
+	border-radius: 10px;
+}
+
+.container{
+	width: 50%;
+}
+
+body{
+	background-color: #f2f2f2;
+}
+.container h1{
+	text-align: center;
+	color: white;
+	font-family: Segoe Script;
+}
+
+#selecionar, #pesquisa{
+	margin: 5px;
+	width: 50%;
+	margin-left:165px;
+}
+
+button{
+	margin: 5px;
+	width: 20%;
+ }
+
+h3{
+	font-family: Segoe Script;
+	color: white;
+	font-size: 30px;
+}

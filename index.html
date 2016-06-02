@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang='pt'>
+<head>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="jquery-1.12.3.js"></script>
+	<script src="script.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>                  
+		</button>
+      	<a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="http://hacktheuniverse.github.io/star-api/">Star API Documentation</a></li>
+		</ul>
+    </div>
+</nav>
+
+<div class="jumbotron">
+	<div class="container text-center">
+		<h1>STAR API </h1>
+		<h3>O lugar para achar estrelas</h3>
+	</div>
+</div>
+
+<div class="container text-center" id="conteudoPesquisa">
+		<form role="form">
+			<div class="radio">
+				<label><input id="todos" type="radio" name="Opcao">Ver todo</label>
+				<label><input id="porNome" type="radio" name="Opcao"checked>Pesquisar Nome</label>
+			</div>
+		</form>
+		<select id="selecionar" class="form-control">
+			<option value="selecionar">Selecione categoria</option>
+			<option value="stars">Estrelas</option>
+			<option value="exo_planets">Exoplanetas </option>
+			<!--<option value="local_groups">Grupo de galáxias</option>-->
+			<option value="open_cluster">Open stars</option>
+		</select>
+		<form class="form-center">
+			<input type="pesquisa" id="pesquisa" class="form-control" size="50" placeholder="Digite o nome">
+		</form>
+		<button type="button" id="botaoPesquisa" class="btn btn-default">
+			<span class="glyphicon glyphicon-search"></span> Pesquisar
+		</button>
+</div>
+</body>
+</html>
