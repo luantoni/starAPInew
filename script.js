@@ -1,6 +1,15 @@
 var http="http://star-api.herokuapp.com/api/v1/";
+var cabecalho={
+ listaestrelas:'<table id="oi" class="table table-bordered table-responsive " border="1"><tr><th>Id</th><th>Nome</th><th>Luminosidade</th><th>Cor</th><th>Distância</th><th>Plx</th><th>Velocidade</th></tr>',
+ listaexo: '<table class="table table-bordered table-responsive " border="1"><tr><th>Id</th><th>Nome</th><th>Número Planetas</th><th>Distância</th></tr>',
+ listaopen: '<table class="table table-bordered table-responsive " border="1"><tr><th>Id</th><th>Nome</th><th>Diâmetro</th><th>Metal</th><th>Distância</th></tr>',
+ listatodos: '<table class="table table-bordered table-responsive " border="1"><tr><th>Id</th><th>Nome</th></tr>'
+}
+
+
 
 $(document).ready(function(){
+
 	if ($("#porNome").is(':checked')){
 		iniciar();
 	}
@@ -18,7 +27,7 @@ $(document).ready(function(){
 	$("#todos").click(function(){
 		$("#selecionar").val("selecionar");
 		limparSelect();
-		esconde(["#pesquisa"]);
+		esconde(["#pesquisa","#selectCategorias"]);
 	});
 	$("#botaoPesquisar").click(function(){
 		selectValue = testarSelect();
@@ -60,22 +69,27 @@ function categoriasValue(selectValue){
 function testeValor(cor, distancia, brilho, numplanetas, distanciaExo, diametroOp, distanciaOp){
 	var data;
 	selectValue = testarSelect();
-	if (distanciaExo != ""){
-		var distanciaExo = splitValue(distanciaExo);
-		data = [distanciaExo]
-		testeExoUrl(data, numplanetas, selectValue);
-	}
-	else if (cor != "" || brilho != ""){
-		var cor = splitValue(cor);
-		var brilho = splitValue(brilho);
-		data = [cor, brilho]
-		testeEstrelaUrl(data, selectValue);
-	}
-	else if (distanciaOp != "" || diametroOp != ""){
-		var distanciaOp = splitValue(distanciaOp);
-		var diametroOp = splitValue(diametroOp);
-		data = [distanciaOp, diametroOp]
-		testeOpenUrl(data, selectValue);
+	switch(selectValue){
+		case "exo_planets":
+			var distanciaExo = splitValue(distanciaExo);
+			data = [distanciaExo,0,0]
+			data = testeUndefined(data);
+			testeExoUrl(data, numplanetas, selectValue);
+		break;
+		case "stars":
+			var cor = splitValue(cor);
+			var brilho = splitValue(brilho);
+			data = [cor, brilho, distancia]
+			data = testeUndefined(data);
+			testeEstrelaUrl(data, selectValue);
+		break;
+		case "open_cluster":
+			var distanciaOp = splitValue(distanciaOp);
+			var diametroOp = splitValue(diametroOp);
+			data = [distanciaOp, diametroOp, 0]
+			data = testeUndefined(data);
+			testeOpenUrl(data, selectValue);
+		break;
 	}
 }
 function splitValue(parametro){
@@ -85,9 +99,20 @@ function splitValue(parametro){
 	var posicaoMaxima = parametro.substring(letraMaiscula+1,posicaoTotal);
 	return {"min":posicaoMinima, "max":posicaoMaxima};
 }
+
+function testeUndefined(data){
+	var testeFirstData = isNaN(data[0].max);
+	var testeSecondData = isNaN(data[1].max);
+	var testeThirdData = isNaN(data[2]);
+	if (testeFirstData == true) data[0].max="undefined";
+	if (testeSecondData == true) data[1].max="undefined";
+	if (testeThirdData == true) data[2]="undefined";
+	return data;
+}
 function testarCategoria(selectValue){
 	limparInput();
 	var radio = $('input[name=Opcao]:checked', '#radioForm').val();
+	var result="";
 	switch (selectValue){
 		case "selecionar":
 			esconde(["#selectCategorias"]);
@@ -111,68 +136,84 @@ function testarCategoria(selectValue){
 	}
 }
 function numeroPlanetas(numplanetas){
-	if (numplanetas != "numplanetas"){
-		var numplanetas = parseInt(numplanetas);
-		if (numplanetas == 1){
-			var minimo = numplanetas-2;
-			var maximo = numplanetas+1;
-		}
-		else {
-			var minimo = numplanetas-1;
-			var maximo = numplanetas+1;
-		}
-		var numUrl = "min[numplanets]="+minimo+"&max[numplanets]="+maximo;
-	}
-	else if (numplanetas == "numplanetas"){
-		var numUrl = "undefined";
-	}
+	var numplanetas = parseInt(numplanetas);
+	if (numplanetas == 1) {var minimo = numplanetas-2; var maximo = numplanetas+1;}
+	else var minimo = numplanetas-1; var maximo = numplanetas+1;
+	var numUrl = "min[numplanets]="+minimo+"&max[numplanets]="+maximo;
 	return numUrl;
 }
 function testeExoUrl(data, numplanetas, selectValue){
-	numUrl = numeroPlanetas(numplanetas);
-	if (data[0].min == ""){
-		if (data[0].max == "1001")distUrl = "min[distance]="+data[0].max;
-		else if (data[0].max == "distancia") distUrl = "undefined"; 
-	}
-	else if(data[0].min != "") distUrl = "min[distance]="+data[0].min+"&max[distance]="+data[0].max;
+	var distUrl;
+	var numUrl;
+	(numplanetas !="numplanetas") ? numUrl = numeroPlanetas(numplanetas) : numUrl = "undefined";
+	if (data[0].max == "undefined") distUrl = "undefined"; 
+	else if (data[0].max == "1001") distUrl = "min[distance]="+data[0].max;
+	else distUrl = "min[colorb_v]="+data[0].min+"&max[colorb_v]="+data[0].max;
 	request(http+selectValue+"?"+numUrl+"&"+distUrl);
 }
 
 function testeEstrelaUrl(data, selectValue){
-	console.log(data);
-	console.log(data[0].min);
-	console.log(data[0].max);
-	if (data[0].min == "" && data[0].max == "cor"){
-		corUrl = "undefined";
-	}
-	else if (data[0].min != "" && data[0].max != "cor") {
-		var corUrl = "min[colorb_v]="+data[0].min+"&max[colorb_v]="+data[0].max;
-	}
+	var corUrl;
+	var brilhoUrl;
+	var anosUrl;
+	if (data[0].max == "undefined")	corUrl = "undefined";
+	else corUrl = "min[colorb_v]="+data[0].min+"&max[colorb_v]="+data[0].max;
 
-	if (data[1].min == "" && data[1].max == "brilho"){
-		brilhoUrl = "undefined";
-	}
-	else if (data[1].min != "" && data[1].max != "brilho"){
-		var brilhoUrl = "min[absmag]="+data[1].min+"&max[absmag]="+data[1].max;
-	}
+	if (data[1].max == "undefined") brilhoUrl = "undefined";
+	else brilhoUrl = "min[absmag]="+data[1].min+"&max[absmag]="+data[1].max;
 
-	if (distancia == "distancia"){
-		anosUrl = "undefined";
-	}
-	else if (distancia != "distancia"){
-		var anosUrl = "max[distly]="+distancia;
-	}
+	if (data[2] == "undefined")	anosUrl = "undefined";
+	else anosUrl = "max[distly]="+data[2];
 	request(http+selectValue+"?"+brilhoUrl+"&"+anosUrl+"&"+corUrl);
 }
 
-function testeOpenUrl(data){
+function testeOpenUrl(data, selectValue){
+	var distUrl;
+	var diamUrl;
+
+	if (data[0].max == "undefined") distUrl = "undefined"; 
+	else if (data[0].max == "6001") distUrl = "min[distly]="+data[0].max;
+	else distUrl = "min[distly]="+data[0].min+"&max[distly]="+data[0].max;
+
+	if (data[1].max == "undefined") diamUrl = "undefined";
+	else if (data[1].max == "100") diamUrl = "min[diam]="+data[1].max;
+	else diamUrl = "min[diam]="+data[1].min+"&max[diam]="+data[1].max;
+	request(http+selectValue+"?"+diamUrl+"&"+distUrl);
 }
 
 function request(url){
 	$.getJSON(url, function (myArr){
-		console.log(myArr);
+		$('#conteudo').html('');
+		var len = $(myArr).size();
+		var result = "";
+		selectValue = testarSelect();
+		if (selectValue == "stars") result += cabecalho.listaestrelas;
+		else if (selectValue == "exo_planets") result += cabecalho.listaexo;
+		else if (selectValue == "open_cluster") result+= cabecalho.listaopen;
+		var i;
+		var b=0;
+     	b = $(cabecalho.listaestrelas + " th").length;
+     	console.log(b);
+		for (i=0; i < 10; i++){
+			result+='<tr><td>'+ myArr[i].id + '</td>';
+			result += '<td>'+ myArr[i].label + '</td>';
+			result += (($(myArr[i].lum).length !=0) ? '<td>'+myArr[i].lum+'</td>' : "");
+			result += (($(myArr[i].colorb_v).length !=0) ? '<td>'+myArr[i].colorb_v+'</td>' : "");
+			result += (($(myArr[i].distly).length !=0) ? '<td>'+myArr[i].distly+'</td><td></td>' : "");
+			result += (($(myArr[i].plx).length !=0) ? '<td>'+myArr[i].plx+'</td>' : "");
+			result += (($(myArr[i].speed).length !=0) ? '<td>'+myArr[i].speed+'</td><td></td>' : "");
+			result += (($(myArr[i].numplanets).length !=0) ? '<td>'+myArr[i].numplanets+'</td>' : "");
+			result += (($(myArr[i].distance).length !=0) ? '<td>'+myArr[i].distance+'</td>' : "");
+			result += (($(myArr[i].diam).length !=0) ? '<td>'+ myArr[i].diam+'</td>' : "");
+			result += (($(myArr[i].metal).length !=0) ? '<td>'+myArr[i].metal+'</td>' : "");
+			'</tr>';
+		}
+		'</table>';
+		$("#conteudo").show();
+		$('#conteudo').html(result);
 	});
 }
+
 function limparInput(){
 	$("#pesquisa").val('');
 }
