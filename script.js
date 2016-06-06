@@ -6,8 +6,6 @@ var cabecalho={
  listatodos: '<table class="table table-bordered table-responsive " border="1"><tr><th>Id</th><th>Nome</th></tr>'
 }
 
-
-
 $(document).ready(function(){
 
 	if ($("#porNome").is(':checked')){
@@ -16,18 +14,19 @@ $(document).ready(function(){
 	$("#selecionar").change(function(){
 		selectValue = testarSelect();
 		testarCategoria(selectValue);
+		esconde(["#conteudo"]);
 		limparSelect();
 	});
 	$("#porNome").click(function(){
 		limparSelect();
 		$("#selecionar").val("selecionar");
 		mostra(["#pesquisa"]);
-		esconde(["#selectCategorias"]);
+		esconde(["#selectCategorias", "#conteudo"]);
 	});
 	$("#todos").click(function(){
 		$("#selecionar").val("selecionar");
 		limparSelect();
-		esconde(["#pesquisa","#selectCategorias"]);
+		esconde(["#pesquisa","#selectCategorias","#conteudo"]);
 	});
 	$("#botaoPesquisar").click(function(){
 		selectValue = testarSelect();
@@ -35,6 +34,16 @@ $(document).ready(function(){
  		(inputValue !="") ? pesquisarNome(selectValue, inputValue) : pesquisarTodos(selectValue);
 	});
 });
+
+$(document).keypress(function(e) {
+	if (e.which == 13) {
+		e.preventDefault();
+		inputValue = testarInput();
+		selectValue = testarSelect();
+		(inputValue !="") ? pesquisarNome(selectValue, inputValue) : pesquisarTodos(selectValue);
+	}
+});
+
 function iniciar(){
 	mostra(["#pesquisa","#botaoPesquisa","#selecionar"]);
 	esconde(["#selectCategorias"]);
@@ -50,7 +59,7 @@ function testarInput(){
 }
 function pesquisarNome(selectValue, inputValue){
 	var nbsp = inputValue.replace('%20',' ');
-	request(http+selectValue+"/"+inputValue);
+	requestIndividual(http+selectValue+"/"+inputValue);
 }
 function pesquisarTodos(selectValue){
 	var radio = $('input[name=Opcao]:checked', '#radioForm').val();
@@ -191,7 +200,22 @@ function request(url){
 		montarTabela(myArr, result);
 	});
 }
-
+function requestIndividual(url){
+	$.getJSON(url, function (myArr){
+		selectValue = testarSelect();
+		var result = "";
+		result+= cabecalho.listatodos;
+		montarTabelaIndividual(myArr, result);
+	});
+}
+function montarTabelaIndividual(myArr, result){
+	result+='<tr><td>'+ myArr.id + '</td>';
+	result += '<td>'+ myArr.label + '</td>';
+	'</tr>';
+	'</table>';
+	$("#conteudo").show();
+	$('#conteudo').html(result);
+}
 function montarTabela(myArr, result){
 		for (i=0; i < 10; i++){
 			result+='<tr><td>'+ myArr[i].id + '</td>';
@@ -217,7 +241,6 @@ function montarTabela(myArr, result){
 		'</table>';
 		$("#conteudo").show();
 		$('#conteudo').html(result);
-
 }
 
 function limparInput(){
