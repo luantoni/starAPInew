@@ -183,35 +183,41 @@ function testeOpenUrl(data, selectValue){
 
 function request(url){
 	$.getJSON(url, function (myArr){
-		$('#conteudo').html('');
-		var len = $(myArr).size();
-		var result = "";
 		selectValue = testarSelect();
+		var result = "";
 		if (selectValue == "stars") result += cabecalho.listaestrelas;
 		else if (selectValue == "exo_planets") result += cabecalho.listaexo;
 		else if (selectValue == "open_cluster") result+= cabecalho.listaopen;
-		var i;
-		var b=0;
-     	b = $(cabecalho.listaestrelas + " th").length;
-     	console.log(b);
+		montarTabela(myArr, result);
+	});
+}
+
+function montarTabela(myArr, result){
 		for (i=0; i < 10; i++){
 			result+='<tr><td>'+ myArr[i].id + '</td>';
 			result += '<td>'+ myArr[i].label + '</td>';
-			result += (($(myArr[i].lum).length !=0) ? '<td>'+myArr[i].lum+'</td>' : "");
-			result += (($(myArr[i].colorb_v).length !=0) ? '<td>'+myArr[i].colorb_v+'</td>' : "");
-			result += (($(myArr[i].distly).length !=0) ? '<td>'+myArr[i].distly+'</td><td></td>' : "");
-			result += (($(myArr[i].plx).length !=0) ? '<td>'+myArr[i].plx+'</td>' : "");
-			result += (($(myArr[i].speed).length !=0) ? '<td>'+myArr[i].speed+'</td><td></td>' : "");
-			result += (($(myArr[i].numplanets).length !=0) ? '<td>'+myArr[i].numplanets+'</td>' : "");
-			result += (($(myArr[i].distance).length !=0) ? '<td>'+myArr[i].distance+'</td>' : "");
-			result += (($(myArr[i].diam).length !=0) ? '<td>'+ myArr[i].diam+'</td>' : "");
-			result += (($(myArr[i].metal).length !=0) ? '<td>'+myArr[i].metal+'</td>' : "");
-			'</tr>';
-		}
+			if ($(myArr[i].lum).length !=0){
+				result += '<td>'+myArr[i].lum+'</td>';
+				result += (($(myArr[i].colorb_v).length !=0) ? '<td>'+myArr[i].colorb_v+'</td>' : "");
+				result += (($(myArr[i].distly).length !=0) ? '<td>'+myArr[i].distly+'</td>' : "");
+				result += (($(myArr[i].plx).length !=0) ? '<td>'+myArr[i].plx+'</td>' : "<td></td>");
+				result += (($(myArr[i].speed).length !=0) ? '<td>'+myArr[i].speed+'</td>' : "<td></td>");
+			}
+			if ($(myArr[i].numplanets).length !=0){
+				result +=  '<td>'+myArr[i].numplanets+'</td>';
+				result += (($(myArr[i].distance).length !=0) ? '<td>'+myArr[i].distance+'</td>' : "");
+			}
+			if ($(myArr[i].diam).length !=0){
+				result += '<td>'+ myArr[i].diam+'</td>';
+				result += (($(myArr[i].metal).length !=0) ? '<td>'+myArr[i].metal+'</td>' : "<td></td>");
+				result += (($(myArr[i].distly).length !=0) ? '<td>'+myArr[i].distly+'</td>' : "");
+			}
+		'</tr>';
+	}
 		'</table>';
 		$("#conteudo").show();
 		$('#conteudo').html(result);
-	});
+
 }
 
 function limparInput(){
